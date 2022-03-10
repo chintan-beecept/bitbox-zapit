@@ -19,6 +19,7 @@ dependencies:
   meta: ^1.1.6
   slp_mdm: ^0.1.0
   slp_parser: ^0.0.3
+  convert:
 
 dev_dependencies:
   flutter_test:
