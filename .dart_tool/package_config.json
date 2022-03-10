@@ -146,6 +146,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "slp_mdm",
+      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/slp_mdm-0.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.5"
+    },
+    {
+      "name": "slp_parser",
+      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/slp_parser-0.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "1.20"
+    },
+    {
       "name": "source_span",
       "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.1",
       "packageUri": "lib/",
@@ -200,7 +212,7 @@
       "languageVersion": "2.1"
     }
   ],
-  "generated": "2022-03-10T06:12:56.807097Z",
+  "generated": "2022-03-10T08:36:05.225475Z",
   "generator": "pub",
   "generatorVersion": "2.14.4"
 }

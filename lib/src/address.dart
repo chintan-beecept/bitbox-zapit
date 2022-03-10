@@ -184,6 +184,30 @@ class Address {
     return toBase58Check(decoded["hash"], version);
   }
 
+  /// Converts legacy or cash address to SLP address
+  static String toSLPAddress(String address, [bool includePrefix = true]) {
+    final decoded = Address._decode(address);
+    switch (decoded["prefix"]) {
+      case 'bitcoincash':
+      case 'simpleledger':
+        decoded['prefix'] = "simpleledger";
+        break;
+      case 'bchtest':
+      case 'slptest':
+        decoded['prefix'] = "slptest";
+        break;
+      default:
+        throw FormatException("Unsupported address format: $address");
+    }
+    final slpAddress =
+        Address._encode(decoded['prefix'], decoded['type'], decoded["hash"]);
+    if (!includePrefix) {
+      return slpAddress.split(":")[1];
+    } else {
+      return slpAddress;
+    }
+  }
+
   /// Detects type of the address and returns [formatCashAddr] or [formatLegacy]
   static int detectFormat(String address) {
     // decode the address to determine the format
@@ -544,28 +568,4 @@ class Utxo {
         "height": height,
         "confirmations": confirmations
       });
-
-  /// Converts legacy or cash address to SLP address
-  static String toSLPAddress(String address, [bool includePrefix = true]) {
-    final decoded = Address._decode(address);
-    switch (decoded["prefix"]) {
-      case 'bitcoincash':
-      case 'simpleledger':
-        decoded['prefix'] = "simpleledger";
-        break;
-      case 'bchtest':
-      case 'slptest':
-        decoded['prefix'] = "slptest";
-        break;
-      default:
-        throw FormatException("Unsupported address format: $address");
-    }
-    final slpAddress =
-        Address._encode(decoded['prefix'], decoded['type'], decoded["hash"]);
-    if (!includePrefix) {
-      return slpAddress.split(":")[1];
-    } else {
-      return slpAddress;
-    }
-  }
 }

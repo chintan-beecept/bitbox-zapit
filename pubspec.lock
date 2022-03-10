@@ -163,6 +163,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  slp_mdm:
+    dependency: "direct main"
+    description:
+      name: slp_mdm
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
+  slp_parser:
+    dependency: "direct main"
+    description:
+      name: slp_parser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   source_span:
     dependency: transitive
     description:
