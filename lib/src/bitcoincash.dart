@@ -1,3 +1,7 @@
+import 'dart:typed_data';
+
+import 'package:bitbox/src/utils/magic_hash.dart';
+
 import 'utils/bip21.dart';
 
 /// Bitcoin Cash specific utilities
@@ -47,4 +51,13 @@ class BitcoinCash {
   static Map<String, dynamic> decodeBIP21(String uri) {
     return Bip21.decode(uri);
   }
+
+
+  // Sign a string message with privateKey in Bitcoin Signature format
+  static Uint8List signMessage(String message, [returnString = false]) {
+    Uint8List signatureBuffer = magicHash(message);
+    //return utf8.decode(signatureBuffer);
+    return signatureBuffer;
+  }
+
 }
