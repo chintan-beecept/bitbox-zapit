@@ -13,3 +13,4 @@ export 'src/transactionbuilder.dart';
 export 'src/varuint.dart';
 export 'src/blockchain.dart';
 export 'src/slp.dart';
+export 'src/crypto/crypto.dart';
