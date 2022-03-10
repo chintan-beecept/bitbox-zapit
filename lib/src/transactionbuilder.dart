@@ -28,14 +28,15 @@ class TransactionBuilder {
   final Map _prevTxSet = {};
 
   /// Creates an empty transaction builder
-  TransactionBuilder({Network network, int maximumFeeRate}) :
-    this._network = network ?? Network.bitcoinCash(),
-    this._maximumFeeRate = maximumFeeRate ?? 2500,
-    this._inputs = [],
-    this._tx = new Transaction();
+  TransactionBuilder({Network network, int maximumFeeRate})
+      : this._network = network ?? Network.bitcoinCash(),
+        this._maximumFeeRate = maximumFeeRate ?? 2500,
+        this._inputs = [],
+        this._tx = new Transaction();
 
   /// Creates a builder from pre-built transaction
-  factory TransactionBuilder.fromTransaction(Transaction transaction, [Network network]) {
+  factory TransactionBuilder.fromTransaction(Transaction transaction,
+      [Network network]) {
     final txb = new TransactionBuilder(network: network);
     // Copy transaction fields
     txb.setVersion(transaction.version);
@@ -49,7 +50,7 @@ class TransactionBuilder {
     // Copy inputs
     transaction.inputs.forEach((txIn) {
       txb._addInputUnsafe(txIn.hash, txIn.index,
-        new Input(sequence: txIn.sequence, script: txIn.script));
+          new Input(sequence: txIn.sequence, script: txIn.script));
     });
 
     return txb;
@@ -89,8 +90,11 @@ class TransactionBuilder {
   /// Returns vin of the input
   ///
   /// Throws [ArgumentError] if the inputs of this transaction can't be modified or if [txHashOrInstance] is invalid
-  int addInput(dynamic txHashOrInstance, int vout, [int sequence, Uint8List prevOutScript]) {
-    assert(txHashOrInstance is String || txHashOrInstance is Uint8List || txHashOrInstance is Transaction);
+  int addInput(dynamic txHashOrInstance, int vout,
+      [int sequence, Uint8List prevOutScript]) {
+    assert(txHashOrInstance is String ||
+        txHashOrInstance is Uint8List ||
+        txHashOrInstance is Transaction);
 
     if (!_canModifyInputs()) {
       throw new ArgumentError('No, this would invalidate signatures');
@@ -110,7 +114,11 @@ class TransactionBuilder {
       throw ArgumentError('txHash invalid');
     }
 
-    return _addInputUnsafe(hash, vout, new Input(sequence: sequence, prevOutScript: prevOutScript, value: value));
+    return _addInputUnsafe(
+        hash,
+        vout,
+        new Input(
+            sequence: sequence, prevOutScript: prevOutScript, value: value));
   }
 
   /// Adds transaction output, which can be provided as:
@@ -121,7 +129,7 @@ class TransactionBuilder {
   ///
   /// Throws [ArgumentError] if outputs can't be modified or the output format is invalid
   int addOutput(dynamic data, int value) {
-    assert (data is String || data is Uint8List);
+    assert(data is String || data is Uint8List);
 
     Uint8List scriptPubKey;
     if (data is String) {
@@ -146,16 +154,18 @@ class TransactionBuilder {
   /// indicate, that the developer plans to add change address later based on a result of this calculation
   ///
   /// Throws [ArgumentError] if something goes wrong
-  int getByteCount([bool addChangeOutput = true]) =>
-    BitcoinCash.getByteCount(this._inputs.length, this._tx.outputs.length + (addChangeOutput ? 1 : 0));
+  int getByteCount([bool addChangeOutput = true]) => BitcoinCash.getByteCount(
+      this._inputs.length, this._tx.outputs.length + (addChangeOutput ? 1 : 0));
 
   /// Add signature for the input [vin] using [keyPair] and with a specified [value]
   ///
   /// Throws [ArgumentError] if something goes wrong
-  sign(int vin, ECPair keyPair, int value, [int hashType = Transaction.SIGHASH_ALL]) {
+  sign(int vin, ECPair keyPair, int value,
+      [int hashType = Transaction.SIGHASH_ALL]) {
     hashType = hashType | Transaction.SIGHASH_BITCOINCASHBIP143;
 
-    if (keyPair.network != null && keyPair.network.toString().compareTo(_network.toString()) != 0) {
+    if (keyPair.network != null &&
+        keyPair.network.toString().compareTo(_network.toString()) != 0) {
       throw ArgumentError('Inconsistent network');
     }
 
@@ -171,11 +181,12 @@ class TransactionBuilder {
     final ourPubKey = keyPair.publicKey;
 
     if (!_canSign(input)) {
-    //      Uint8List prevOutScript = pubkeyToOutputScript(ourPubKey);
+      //      Uint8List prevOutScript = pubkeyToOutputScript(ourPubKey);
       _prepareInput(input, ourPubKey, value);
     }
 
-    var signatureHash = this._tx.hashForCashSignature(vin, input.signScript, value, hashType);
+    var signatureHash =
+        this._tx.hashForCashSignature(vin, input.signScript, value, hashType);
 
     // enforce in order signing of public keys
     var signed = false;
@@ -211,8 +222,10 @@ class TransactionBuilder {
 
   _build(bool allowIncomplete) {
     if (!allowIncomplete) {
-      if (_tx.inputs.length == 0) throw ArgumentError('Transaction has no inputs');
-      if (_tx.outputs.length == 0) throw ArgumentError('Transaction has no outputs');
+      if (_tx.inputs.length == 0)
+        throw ArgumentError('Transaction has no inputs');
+      if (_tx.outputs.length == 0)
+        throw ArgumentError('Transaction has no outputs');
     }
 
     final tx = Transaction.clone(_tx);
@@ -226,12 +239,11 @@ class TransactionBuilder {
 
     for (var i = 0; i < _inputs.length; i++) {
       if (_inputs[i].pubkeys != null &&
-        _inputs[i].signatures != null &&
-        _inputs[i].pubkeys.length != 0 &&
-        _inputs[i].signatures.length != 0) {
+          _inputs[i].signatures != null &&
+          _inputs[i].pubkeys.length != 0 &&
+          _inputs[i].signatures.length != 0) {
         final result = _buildInput(_inputs[i]);
         tx.setInputScript(i, result);
-
       } else if (!allowIncomplete) {
         throw new ArgumentError('Transaction is not complete');
       }
@@ -285,25 +297,25 @@ class TransactionBuilder {
     // if inputs are being signed with SIGHASH_NONE, we don't strictly need outputs
     // .build() will fail, but .buildIncomplete() is OK
     return (this._tx.outputs.length == 0) &&
-      _inputs.map((input) {
-        if (input.signatures == null || input.signatures.length == 0)
-          return false;
-        return input.signatures.map((signature) {
-          if (signature == null) return false; // no signature, no issue
-          final hashType = _signatureHashType(signature);
-          if (hashType & SIGHASH_NONE != 0)
-            return false; // SIGHASH_NONE doesn't care about outputs
-          return true; // SIGHASH_* does care
+        _inputs.map((input) {
+          if (input.signatures == null || input.signatures.length == 0)
+            return false;
+          return input.signatures.map((signature) {
+            if (signature == null) return false; // no signature, no issue
+            final hashType = _signatureHashType(signature);
+            if (hashType & SIGHASH_NONE != 0)
+              return false; // SIGHASH_NONE doesn't care about outputs
+            return true; // SIGHASH_* does care
+          }).contains(true);
         }).contains(true);
-      }).contains(true);
   }
 
   bool _canSign(Input input) {
     return input.pubkeys != null &&
-      input.signScript != null &&
-      input.signatures != null &&
-      input.signatures.length == input.pubkeys.length &&
-      input.pubkeys.length > 0;
+        input.signScript != null &&
+        input.signatures != null &&
+        input.signatures.length == input.pubkeys.length &&
+        input.pubkeys.length > 0;
   }
 
   _addInputUnsafe(Uint8List hash, int vout, Input options) {
@@ -346,7 +358,7 @@ class TransactionBuilder {
     final prevOutScript = bscript.compile([
       Opcodes.OP_DUP,
       Opcodes.OP_HASH160,
-      hash160(kpPubKey),
+      Crypto.hash160(kpPubKey),
       Opcodes.OP_EQUALVERIFY,
       Opcodes.OP_CHECKSIG
     ]);
@@ -363,10 +375,7 @@ class TransactionBuilder {
   // returns input script
   Uint8List _buildInput(Input input) {
     // this is quite rudimentary for P2PKH purposes
-    return bscript.compile([
-      input.signatures.first,
-      input.pubkeys.first
-    ]);
+    return bscript.compile([input.signatures.first, input.pubkeys.first]);
   }
 
   Output _expandOutput(Uint8List script, Uint8List ourPubKey) {
@@ -374,12 +383,13 @@ class TransactionBuilder {
       //TODO: implement other script types too
       throw ArgumentError("Unsupport script!");
     }
-    
+
     final scriptChunks = bscript.decompile(script);
 
     // does our hash160(pubKey) match the output scripts?
-    Uint8List pkh1 = scriptChunks[2];//new P2PKH(data: new P2PKHData(output: script)).data.hash;
-    Uint8List pkh2 = hash160(ourPubKey);
+    Uint8List pkh1 = scriptChunks[
+        2]; //new P2PKH(data: new P2PKHData(output: script)).data.hash;
+    Uint8List pkh2 = Crypto.hash160(ourPubKey);
 
     // this check should work, but for some reason doesn't - it returns false even if both lists are the same
     // TODO: debug and re-enable this validation
@@ -403,22 +413,23 @@ class TransactionBuilder {
     return p2pkh.data.output;
   }
 
-  Uint8List _toInputScript(Uint8List pubkey, Uint8List signature, [Network nw]) {
+  Uint8List _toInputScript(Uint8List pubkey, Uint8List signature,
+      [Network nw]) {
     final network = nw ?? Network.bitcoinCash();
     final p2pkh = P2PKH(
-      data: P2PKHData(pubkey: pubkey, signature: signature),
-      network: network);
+        data: P2PKHData(pubkey: pubkey, signature: signature),
+        network: network);
     return p2pkh.data.input;
   }
 
   bool _isP2PKHOutput(script) {
     final buffer = bscript.compile(script);
     return buffer.length == 25 &&
-      buffer[0] == Opcodes.OP_DUP &&
-      buffer[1] == Opcodes.OP_HASH160 &&
-      buffer[2] == 0x14 &&
-      buffer[23] == Opcodes.OP_EQUALVERIFY &&
-      buffer[24] == Opcodes.OP_CHECKSIG;
+        buffer[0] == Opcodes.OP_DUP &&
+        buffer[1] == Opcodes.OP_HASH160 &&
+        buffer[2] == 0x14 &&
+        buffer[23] == Opcodes.OP_EQUALVERIFY &&
+        buffer[24] == Opcodes.OP_CHECKSIG;
   }
 
   bool _isCoinbaseHash(Uint8List buffer) {
@@ -427,4 +438,5 @@ class TransactionBuilder {
       if (buffer[i] != 0) return false;
     }
     return true;
-  }}
+  }
+}
