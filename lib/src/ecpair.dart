@@ -2,8 +2,6 @@ import 'dart:typed_data';
 import 'dart:math';
 import 'package:bip32/src/utils/ecurve.dart' as ecc;
 import 'package:bip32/src/utils/wif.dart' as wif;
-import 'package:bitbox/bitbox.dart';
-import 'package:pointycastle/ecc/api.dart';
 
 import 'address.dart';
 import 'crypto/crypto.dart';
@@ -93,24 +91,14 @@ class ECPair {
         compressed: compressed));
   }
 
-  /// Returns signature object instead of serialized signature so that it is better handled in bip66 encoding
-  ECSignature sign(Uint8List hash) {
-    return eccSign(hash, privateKey);
+  /// Signs the provided [hash] with the private key
+  Uint8List sign(Uint8List hash) {
+    return ecc.sign(hash, privateKey);
   }
 
   /// Verifies whether the provided [signature] matches the [hash] using the keypair's [publicKey]
   bool verify(Uint8List hash, Uint8List signature) {
     return ecc.verify(hash, publicKey, signature);
-  }
-
-  /// custom EC signature function that returns a signature object instead of serialized result
-  ECSignature eccSign(Uint8List hash, Uint8List x) {
-    if (!ecc.isScalar(hash)) throw new ArgumentError(ecc.THROW_BAD_HASH);
-    if (!ecc.isPrivate(x)) throw new ArgumentError(ecc.THROW_BAD_PRIVATE);
-
-    ECSignature sig = ecc.deterministicGenerateK(hash, x);
-
-    return sig;
   }
 }
 
