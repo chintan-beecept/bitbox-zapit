@@ -9,15 +9,15 @@
     },
     {
       "name": "bip32",
-      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/bip32-1.0.5",
+      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/bip32-1.0.10",
       "packageUri": "lib/",
       "languageVersion": "2.0"
     },
     {
       "name": "bip39",
-      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/bip39-1.0.3",
+      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/bip39-1.0.6",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "boolean_selector",
@@ -27,9 +27,9 @@
     },
     {
       "name": "bs58check",
-      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/bs58check-1.0.1",
+      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/bs58check-1.0.2",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "characters",
@@ -57,15 +57,15 @@
     },
     {
       "name": "convert",
-      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/convert-2.1.1",
+      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/convert-3.0.1",
       "packageUri": "lib/",
-      "languageVersion": "1.17"
+      "languageVersion": "2.12"
     },
     {
       "name": "crypto",
-      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-2.1.4",
+      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-3.0.1",
       "packageUri": "lib/",
-      "languageVersion": "2.1"
+      "languageVersion": "2.12"
     },
     {
       "name": "fake_async",
@@ -93,9 +93,9 @@
     },
     {
       "name": "hex",
-      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/hex-0.1.2",
+      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/hex-0.2.0",
       "packageUri": "lib/",
-      "languageVersion": "1.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "http",
@@ -108,6 +108,12 @@
       "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-3.1.3",
       "packageUri": "lib/",
       "languageVersion": "2.0"
+    },
+    {
+      "name": "js",
+      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "matcher",
@@ -135,9 +141,9 @@
     },
     {
       "name": "pointycastle",
-      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/pointycastle-1.0.1",
+      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/pointycastle-3.5.2",
       "packageUri": "lib/",
-      "languageVersion": "0.8"
+      "languageVersion": "2.12"
     },
     {
       "name": "sky_engine",
@@ -147,15 +153,15 @@
     },
     {
       "name": "slp_mdm",
-      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/slp_mdm-0.1.0",
+      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/slp_mdm-1.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.5"
+      "languageVersion": "2.12"
     },
     {
       "name": "slp_parser",
-      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/slp_parser-0.0.3",
+      "rootUri": "file:///home/beecept/Beecept/flutter/flutter/.pub-cache/hosted/pub.dartlang.org/slp_parser-0.1.0",
       "packageUri": "lib/",
-      "languageVersion": "1.20"
+      "languageVersion": "2.12"
     },
     {
       "name": "source_span",
@@ -212,7 +218,7 @@
       "languageVersion": "2.1"
     }
   ],
-  "generated": "2022-03-10T09:11:32.331365Z",
+  "generated": "2022-03-10T09:18:25.734761Z",
   "generator": "pub",
   "generatorVersion": "2.14.4"
 }

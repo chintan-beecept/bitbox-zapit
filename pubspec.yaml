@@ -11,15 +11,15 @@ dependencies:
     sdk: flutter
   http: ^0.12.0+1
   bip39: ^1.0.3
-  pointycastle: ^1.0.1
+  pointycastle:
   bip32: ^1.0.5
-  hex: ^0.1.2
+  hex: ^0.2.0
   bs58check: ^1.0.1
   fixnum: ^0.10.9
   meta: ^1.1.6
-  slp_mdm: ^0.1.0
+  slp_mdm: ^1.0.0
   slp_parser:
-  convert: ^2.1.1
+  convert: ^3.0.0
   
 
 dev_dependencies:
