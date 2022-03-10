@@ -81,7 +81,8 @@ class Address {
   ///
   /// See https://developer.bitcoin.com/bitbox/docs/address#unconfirmed for details about the returned format. However
   /// note, that processing from array to map is done on the library side
-  static Future<dynamic> getUnconfirmed(addresses, [returnAsMap = false]) async {
+  static Future<dynamic> getUnconfirmed(addresses,
+      [returnAsMap = false]) async {
     final result = await _sendRequest("unconfirmed", addresses);
 
     if (result is Map) {
@@ -92,9 +93,11 @@ class Address {
 
       result.forEach((addressUtxoMap) {
         if (returnAsMap) {
-          returnMap[addressUtxoMap["cashAddr"]] = Utxo.convertMapListToUtxos(addressUtxoMap["utxos"]);
+          returnMap[addressUtxoMap["cashAddr"]] =
+              Utxo.convertMapListToUtxos(addressUtxoMap["utxos"]);
         } else {
-          addressUtxoMap["utxos"] = Utxo.convertMapListToUtxos(addressUtxoMap["utxos"]);
+          addressUtxoMap["utxos"] =
+              Utxo.convertMapListToUtxos(addressUtxoMap["utxos"]);
           returnList.add(addressUtxoMap);
         }
       });
@@ -123,9 +126,11 @@ class Address {
 
       result.forEach((addressUtxoMap) {
         if (returnAsMap) {
-          returnMap[addressUtxoMap["cashAddress"]] = Utxo.convertMapListToUtxos(addressUtxoMap["utxos"]);
+          returnMap[addressUtxoMap["cashAddress"]] =
+              Utxo.convertMapListToUtxos(addressUtxoMap["utxos"]);
         } else {
-          addressUtxoMap["utxos"] = Utxo.convertMapListToUtxos(addressUtxoMap["utxos"]);
+          addressUtxoMap["utxos"] =
+              Utxo.convertMapListToUtxos(addressUtxoMap["utxos"]);
           returnList.add(addressUtxoMap);
         }
       });
@@ -146,7 +151,7 @@ class Address {
   /// See https://developer.bitcoin.com/bitbox/docs/address#transactions for format details.
   /// Note, that conversion from List to Map when [returnAsMap] is true takes place in this library
   static Future<dynamic> transactions(addresses, [returnAsMap = false]) async =>
-    await _sendRequest("transactions", addresses, returnAsMap);
+      await _sendRequest("transactions", addresses, returnAsMap);
 
   /// Converts legacy address to cash address
   static String toCashAddress(String legacyAddress,
@@ -539,4 +544,28 @@ class Utxo {
         "height": height,
         "confirmations": confirmations
       });
+
+  /// Converts legacy or cash address to SLP address
+  static String toSLPAddress(String address, [bool includePrefix = true]) {
+    final decoded = Address._decode(address);
+    switch (decoded["prefix"]) {
+      case 'bitcoincash':
+      case 'simpleledger':
+        decoded['prefix'] = "simpleledger";
+        break;
+      case 'bchtest':
+      case 'slptest':
+        decoded['prefix'] = "slptest";
+        break;
+      default:
+        throw FormatException("Unsupported address format: $address");
+    }
+    final slpAddress =
+        Address._encode(decoded['prefix'], decoded['type'], decoded["hash"]);
+    if (!includePrefix) {
+      return slpAddress.split(":")[1];
+    } else {
+      return slpAddress;
+    }
+  }
 }
