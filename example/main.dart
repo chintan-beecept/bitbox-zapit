@@ -41,7 +41,7 @@ void main() async {
   // if you are using testnet, set the appropriate rest api url before making
   // any API calls (like getting address or transaction details or broadcasting a transaction
   if (testnet) {
-    Bitbox.Bitbox.setRestUrl(Bitbox.Bitbox.trestUrl);
+    //  Bitbox.Bitbox.setRestUrl(Bitbox.Bitbox.trestUrl);
   }
 
   // get address details
@@ -93,14 +93,16 @@ void main() async {
 
       // sign all inputs
       signatures.forEach((signature) {
-        builder.sign(signature["vin"], signature["key_pair"], signature["original_amount"]);
+        builder.sign(signature["vin"], signature["key_pair"],
+            signature["original_amount"]);
       });
 
       // build the transaction
       final tx = builder.build();
 
       // broadcast the transaction
-      final txid = (await Bitbox.RawTransactions.sendRawTransaction([tx.toHex()])).first;
+      final txid =
+          (await Bitbox.RawTransactions.sendRawTransaction([tx.toHex()])).first;
 
       // Yatta!
       print("Transaction broadcasted: $txid");

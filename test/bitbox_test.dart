@@ -23,7 +23,7 @@ void main() {
   Map testData;
 
   // Placeholder for data about master, account and childnodes for both networks
-  Map nodeData = {"mainnet" : {}, "testnet" : {}};
+  Map nodeData = {"mainnet": {}, "testnet": {}};
 
   // The whole code would be a bit more elegant if this was a map with true/false as keys and forEach would be used
   // in each of the testing methods. However the whole asynchronisity is messed up when it's done that way,
@@ -43,7 +43,8 @@ void main() {
     // create master nodes for both networks and store their master keys
     for (int i = 0; i < networks.length; i++) {
       final network = networks[i];
-      nodeData[network]["master_node"] = Bitbox.HDNode.fromSeed(seed, network == "testnet");
+      nodeData[network]["master_node"] =
+          Bitbox.HDNode.fromSeed(seed, network == "testnet");
       final masterXPriv = nodeData[network]["master_node"].toXPriv();
       final masterXpub = nodeData[network]["master_node"].toXPub();
 
@@ -58,7 +59,8 @@ void main() {
     // generate the nodes for both networks
     for (int i = 0; i < networks.length; i++) {
       final network = networks[i];
-      nodeData[network]["account_node"] = nodeData[network]["master_node"].derivePath(testData["account_path"]);
+      nodeData[network]["account_node"] =
+          nodeData[network]["master_node"].derivePath(testData["account_path"]);
       final accountXPriv = nodeData[network]["account_node"].toXPriv();
       final accountXPub = nodeData[network]["account_node"].toXPub();
 
@@ -82,7 +84,8 @@ void main() {
 
       testData[network]["child_nodes"].forEach((childTestData) {
         // generate the child node and extract its private key
-        final childNode = nodeData[network]["account_node"].derive(childTestData["index"]);
+        final childNode =
+            nodeData[network]["account_node"].derive(childTestData["index"]);
         final childPrivateKey = childNode.privateKey;
 
         // compare the private key with the original test file
@@ -95,7 +98,8 @@ void main() {
     for (int i = 0; i < networks.length; i++) {
       final network = networks[i];
       testData[network]["child_nodes"].forEach((childTestData) {
-        final childNode = nodeData[network]["account_node"].derive(childTestData["index"]);
+        final childNode =
+            nodeData[network]["account_node"].derive(childTestData["index"]);
         final childLegacy = childNode.toLegacyAddress();
 
         expect(childLegacy, childTestData["legacy"]);
@@ -107,7 +111,8 @@ void main() {
     for (int i = 0; i < networks.length; i++) {
       final network = networks[i];
       testData[network]["child_nodes"].forEach((childTestData) {
-        final childNode = nodeData[network]["account_node"].derive(childTestData["index"]);
+        final childNode =
+            nodeData[network]["account_node"].derive(childTestData["index"]);
         final childCashAddr = childNode.toCashAddress();
 
         expect(childCashAddr, childTestData["cashAddress"]);
@@ -122,7 +127,8 @@ void main() {
       testData[network]["child_nodes"].forEach((childTestData) {
         final cashAddr = childTestData["cashAddress"];
 
-        expect(Bitbox.Address.toLegacyAddress(cashAddr), childTestData["toLegacy"]);
+        expect(Bitbox.Address.toLegacyAddress(cashAddr),
+            childTestData["toLegacy"]);
       });
     }
   });
@@ -133,7 +139,8 @@ void main() {
       testData[network]["child_nodes"].forEach((childTestData) {
         final legacy = childTestData["legacy"];
 
-        expect(Bitbox.Address.toCashAddress(legacy), childTestData["toCashAddr"]);
+        expect(
+            Bitbox.Address.toCashAddress(legacy), childTestData["toCashAddr"]);
       });
     }
   });
@@ -147,7 +154,7 @@ void main() {
       utxosToFetch[network] = <String>[];
 
       // set rest url based on which network is being tested
-      Bitbox.Bitbox.setRestUrl(network == "mainnet" ? Bitbox.Bitbox.restUrl : Bitbox.Bitbox.trestUrl);
+      // Bitbox.Bitbox.setRestUrl(network == "mainnet" ? Bitbox.Bitbox.restUrl : Bitbox.Bitbox.trestUrl);
 
       // Placeholder for test addresses to fetch the details off
       List<String> testAddresses = <String>[];
@@ -187,10 +194,11 @@ void main() {
       // If there were addresses with non-zero balance for this network, fetch their utxos
       if (utxosToFetch[network].length > 0) {
         // set the appropriate rest api url
-        Bitbox.Bitbox.setRestUrl(network == "mainnet" ? Bitbox.Bitbox.restUrl : Bitbox.Bitbox.trestUrl);
+        // Bitbox.Bitbox.setRestUrl(network == "mainnet" ? Bitbox.Bitbox.restUrl : Bitbox.Bitbox.trestUrl);
 
         // fetch the required utxo details
-        utxos[network] = await Bitbox.Address.utxo(utxosToFetch[network]) as List;
+        utxos[network] =
+            await Bitbox.Address.utxo(utxosToFetch[network]) as List;
 
         // go through the list of the returned utxos
         utxos[network].forEach((addressUtxo) {
@@ -225,7 +233,8 @@ void main() {
       final signatures = <Map>[];
 
       // create a transaction builder for the appropriate network
-      final builder = Bitbox.Bitbox.transactionBuilder(testnet: network == "testnet");
+      final builder =
+          Bitbox.Bitbox.transactionBuilder(testnet: network == "testnet");
 
       // go through the list of utxos accumulated in the previous test
       utxos[network].forEach((addressUtxos) {
@@ -238,7 +247,9 @@ void main() {
               // add a signature to the list to be used later
               signatures.add({
                 "vin": signatures.length,
-                "key_pair": nodeData[network]["account_node"].derive(childNode["index"]).keyPair,
+                "key_pair": nodeData[network]["account_node"]
+                    .derive(childNode["index"])
+                    .keyPair,
                 "original_amount": utxo.satoshis
               });
 
@@ -261,7 +272,8 @@ void main() {
 
         // sign all inputs
         signatures.forEach((signature) {
-          builder.sign(signature["vin"], signature["key_pair"], signature["original_amount"]);
+          builder.sign(signature["vin"], signature["key_pair"],
+              signature["original_amount"]);
         });
 
         // build the transaction
@@ -284,19 +296,21 @@ void main() {
       // check if there is a transaction for this network
       if (rawTx.containsKey(network)) {
         // check if this transaction is supposed to be broadcasted
-        if ((network == "testnet" && BROADCAST_TESTNET_TRANSACTION)
-            || (network == "mainnet" && BROADCAST_MAINNET_TRANSACTION)) {
+        if ((network == "testnet" && BROADCAST_TESTNET_TRANSACTION) ||
+            (network == "mainnet" && BROADCAST_MAINNET_TRANSACTION)) {
           // set the appropraite rest api url
-          Bitbox.Bitbox.setRestUrl(network == "mainnet" ? Bitbox.Bitbox.restUrl : Bitbox.Bitbox.trestUrl);
+          // Bitbox.Bitbox.setRestUrl(network == "mainnet" ? Bitbox.Bitbox.restUrl : Bitbox.Bitbox.trestUrl);
           // broadcast the transaction and print its id
-          final txid = (await Bitbox.RawTransactions.sendRawTransaction([rawTx[network]])).first;
+          final txid = (await Bitbox.RawTransactions.sendRawTransaction(
+                  [rawTx[network]]))
+              .first;
 
           expect(true, txid is String);
         }
       }
     }
   });
-  
+
   test('BIP21 test', () {
     final address = 'bitcoincash:qrdsfshx7yzfjl9sfj2khuja5crcu4vaxqrt2qkz5s';
 
@@ -306,12 +320,15 @@ void main() {
       "message": "There you go"
     };
 
-    final encodedPaymentRequest = "bitcoincash:qrdsfshx7yzfjl9sfj2khuja5crcu4vaxqrt2qkz5s?"
-      +"amount=1.0&label=%23BCHForEveryone&message=There%20you%20go";
+    final encodedPaymentRequest =
+        "bitcoincash:qrdsfshx7yzfjl9sfj2khuja5crcu4vaxqrt2qkz5s?" +
+            "amount=1.0&label=%23BCHForEveryone&message=There%20you%20go";
 
-    expect(Bitbox.BitcoinCash.encodeBIP21(address, options), encodedPaymentRequest);
+    expect(Bitbox.BitcoinCash.encodeBIP21(address, options),
+        encodedPaymentRequest);
 
-    final decodedPaymentRequest = Bitbox.BitcoinCash.decodeBIP21(encodedPaymentRequest);
+    final decodedPaymentRequest =
+        Bitbox.BitcoinCash.decodeBIP21(encodedPaymentRequest);
 
     expect(decodedPaymentRequest["address"], address);
     expect(decodedPaymentRequest["options"]["amount"], options["amount"]);
