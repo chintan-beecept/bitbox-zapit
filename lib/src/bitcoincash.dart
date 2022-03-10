@@ -1,7 +1,5 @@
 import 'dart:typed_data';
-
-import 'package:bitbox/src/utils/magic_hash.dart';
-
+import 'utils/magic_hash.dart';
 import 'utils/bip21.dart';
 
 /// Bitcoin Cash specific utilities
